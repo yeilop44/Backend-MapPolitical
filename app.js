@@ -16,7 +16,7 @@ app.use(express.json());
 //app.use(bodyParser.urlencoded({extended: false}));
 //app.use(bodyParser.json());
 app.use(cors());
-app.use(cors({origin: 'https://back-mpolitical.herokuapp.com/'}));
+app.use(cors({origin: 'http://localhost:4200'}));
 
 //Routes
 app.use('/affiliates', affiliateRoutes);
