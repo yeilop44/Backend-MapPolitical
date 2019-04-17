@@ -23,9 +23,6 @@ app.use('/affiliates', affiliateRoutes);
 app.use('/user', userRoutes);
 app.use('/products', productRoutes);
 
-app.use.get('/',(req, res, next) => {
-    res.send('hola')
-});
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
