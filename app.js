@@ -9,7 +9,7 @@ const cors = require('cors');
 
 const affiliateRoutes = require('./api/routes/affiliates'); 
 const userRoutes = require('./api/routes/user'); 
-const productRoutes = require('./api/routes/products'); 
+ 
 
 app.use(morgan('dev')); 
 app.use(express.json());
