@@ -22,14 +22,11 @@ router.post('/', async (req, res, next) => {
         president: req.body.president,
         date: req.body.date,
         fullName: req.body.fullName,
-        address: req.body.address,
-        
+        address: req.body.address, 
         positionLat: req.body.positionLat,
-        positionLng: req.body.positionLng,
-        
+        positionLng: req.body.positionLng,   
         profession: req.body.profession,
-        commission: req.body.commission,
-        noAffiliate: req.body.noAffiliate,
+        phone: req.body.phone,
         identification: req.body.identification,
         observations: req.body.observations
     });
@@ -65,8 +62,7 @@ router.put('/:affiliateId', async (req, res) => {
         fullName: req.body.fullName,
         address: req.body.address,
         profession: req.body.profession,
-        commission: req.body.commission,
-        noAffiliate: req.body.noAffiliate,
+        phone: req.body.phone,
         identification: req.body.identification,
         observations: req.body.observations
 	}

@@ -6,13 +6,10 @@ const affiliateSchema = new Schema({
 	date: { type: String, required: true},
 	fullName: {type: String, required: true},
 	address: {type: String, required: true},
-
 	positionLat: {type: Number, required: true},
-	positionLng: {type: Number, required: true},
-	
+	positionLng: {type: Number, required: true},	
 	profession: {type: String, required: true},
-	commission: {type: String, required: true},
-	noAffiliate: {type: Number, required: true},
+	phone: {type: Number, required: true},
 	identification: {type: Number, required: true},
 	observations: {type: String}
 })
