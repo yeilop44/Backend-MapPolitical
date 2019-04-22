@@ -68,7 +68,6 @@ router.get('/', async (req, res) => {
         userEmail.push(user[i].email);
     }
    
-
     res.status(200).json({
         Count: count,
         Users: userEmail
