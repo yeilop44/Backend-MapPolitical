@@ -32,23 +32,9 @@ router.post('/signup', async (req, res) => {
             message: "User Created",
             User: user
         }); 
-    }
-    
+    }  
         
 });
-
-//getAllUsers
-router.get('/', async (req, res) => {
-    const user = await User.find();
-    const count = user.length;
-    
-    res.status(200).json({
-        Count: count,
-        Users: user.email
-    });
-
-});
-
 
 //Sign In
 router.post('/signin', async (req, res) => {
@@ -70,9 +56,17 @@ router.post('/signin', async (req, res) => {
             token: token
         });
      }
-    
-    
+});
 
+//getAllUsers
+router.get('/', async (req, res) => {
+    const user = await User.find();
+    const count = user.length;
+    
+    res.status(200).json({
+        Count: count,
+        Users: user
+    });
 
 });
 
