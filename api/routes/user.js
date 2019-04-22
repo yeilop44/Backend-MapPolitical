@@ -67,6 +67,7 @@ router.get('/', async (req, res) => {
     for(let i; i<user.length; i++){
         userEmail.push(user[i].email);
     }
+    console.log(userEmail[0].email);
 
     res.status(200).json({
         Count: count,
