@@ -64,10 +64,10 @@ router.get('/', async (req, res) => {
     const count = user.length;
     var userEmail =[];
     
-    for(let i; i<user.length; i++){
+    for(let i=0; i<user.length; i++){
         userEmail.push(user[i].email);
     }
-    console.log(userEmail[0].email);
+   
 
     res.status(200).json({
         Count: count,
