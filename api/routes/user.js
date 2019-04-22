@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
     
     res.status(200).json({
         Count: count,
-        Users: user
+        Users: user.email
     });
 
 });
@@ -66,7 +66,7 @@ router.post('/signin', async (req, res) => {
         const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
         res.status(200).json({
             ok: 'true',
-            User: user.email,
+            User: user,
             token: token
         });
      }
