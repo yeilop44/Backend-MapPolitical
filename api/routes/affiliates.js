@@ -12,11 +12,11 @@ router.get('/', ensureToken, (req, res) => {
         if(err){
             res.sendStatus(403);
         }else{
-            //const affiliate = await Affiliate.find();
-            //const count = affiliate.length; 
+            const affiliate = await Affiliate.find();
+            const count = affiliate.length; 
             res.status(200).json({
-                //Count: count,
-                Items: data
+                Count: count,
+                Items: affiliate
             });
         }
     });     
