@@ -7,15 +7,15 @@ const Affiliate = require('../models/affiliate');
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
     
-    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+    jwt.verify(req.token, 'my_secret_key', (err, data) => {
         if(err){
             res.sendStatus(403);
         }else{
-            const affiliate = await Affiliate.find();
-            const count = affiliate.length; 
+            //const affiliate = await Affiliate.find();
+            //const count = affiliate.length; 
             res.status(200).json({
-                Count: count,
-                Items: affiliate
+                //Count: count,
+                Items: data
             });
         }
     });     
