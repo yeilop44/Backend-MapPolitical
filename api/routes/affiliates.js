@@ -2,15 +2,26 @@ const express = require('express');
 const router = express.Router();
 
 const Affiliate = require('../models/affiliate');
+const user = require('./user');
 
 //getAllAffiliates
-router.get('/', async (req, res) => {
-    const affiliate = await Affiliate.find();
-    const count = affiliate.length; 
-    res.status(200).json({
-        Count: count,
-        Items: affiliate
+router.get('/', ensureToken, async (req, res) => {
+    
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const affiliate = await Affiliate.find();
+            const count = affiliate.length; 
+            res.status(200).json({
+                Count: count,
+                Items: affiliate
+            });
+        }
     });
+    
+    
+   
 });
 
 
@@ -81,5 +92,19 @@ router.put('/:affiliateId', async (req, res) => {
         message: 'Deleted affiliate'
     });
  });
+
+
+ function ensureToken(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    console.log(bearerHeader);
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(" ");
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    } else{
+        res.sendStatus(403);
+    }
+}
 
 module.exports = router;
