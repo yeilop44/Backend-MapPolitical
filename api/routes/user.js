@@ -45,8 +45,7 @@ router.post('/signin', async (req, res) => {
     const user = await User.find({email:email, password:password});
      if( user.length == 0 || user == null ){
         res.status(401).json({
-            message: 'Incorrect user or password XXXXXX'
-    
+            message: 'Incorrect user or password XXXXXX'  
         });
      }else{
         const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
@@ -59,7 +58,7 @@ router.post('/signin', async (req, res) => {
 });
 
 //getAllUsers
-router.get('/', async (req, res) => {
+router.get('/', ensureToken, async (req, res) => {
     const user = await User.find();
     const count = user.length;
     var userEmail =[];
@@ -74,6 +73,11 @@ router.get('/', async (req, res) => {
     });
 
 });
+
+function ensureToken(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    console.log(bearerHeader);
+}
 
 
 module.exports = router;
