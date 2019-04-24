@@ -8,7 +8,7 @@ const Affiliate = require('../models/affiliate');
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
     
-    jwt.verify(req.token, 'my_secret_key', (err, data) => {
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
         if(err){
             res.sendStatus(403);
         }else{
