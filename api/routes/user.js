@@ -63,8 +63,8 @@ router.get('/', ensureToken, async (req, res) => {
         if(err){
             res.sendStatus(403);
         }else{
-            const user = await User.find();
-            const count = user.length;
+           // const user = await User.find();
+            //const count = user.length;
            // var userEmail =[];
             
             //for(let i=0; i<user.length; i++){
@@ -72,8 +72,8 @@ router.get('/', ensureToken, async (req, res) => {
             //}
         
             res.status(200).json({
-                Count: count,
-                Users: user
+               // Count: count,
+                Users: data
             });
         }
     });
