@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const Affiliate = require('../models/affiliate');
-const user = require('./user');
+
 
 //getAllAffiliates
-router.get('/', ensureToken, async (req, res) => {
+router.get('/', ensureToken, (req, res) => {
     
     jwt.verify(req.token, 'my_secret_key', async (err, data) => {
         if(err){
@@ -18,10 +18,7 @@ router.get('/', ensureToken, async (req, res) => {
                 Items: affiliate
             });
         }
-    });
-    
-    
-   
+    });     
 });
 
 
