@@ -59,26 +59,24 @@ router.post('/signin', async (req, res) => {
 
 //getAllUsers
 router.get('/', ensureToken, async (req, res) => {
-    jwt.verify(req.token, 'my_secret_key', (err, data) =>{
+    jwt.verify(req.token, 'my_secret_key', (err, data) => {
         if(err){
             res.sendStatus(403);
         }else{
             const user = await User.find();
             const count = user.length;
-            var userEmail =[];
+           // var userEmail =[];
             
-            for(let i=0; i<user.length; i++){
-                userEmail.push(user[i].email);
-            }
+            //for(let i=0; i<user.length; i++){
+              //  userEmail.push(user[i].email);
+            //}
         
             res.status(200).json({
                 Count: count,
-                Users: userEmail
+                Users: user
             });
         }
     });
-    
-
 });
 
 function ensureToken(req, res, next){
