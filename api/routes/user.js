@@ -63,7 +63,7 @@ router.get('/', ensureToken, async (req, res) => {
         if(err){
             res.sendStatus(403);
         }else{
-           // const user = await User.find();
+            const user = await User.find();
             //const count = user.length;
            // var userEmail =[];
             
@@ -73,7 +73,7 @@ router.get('/', ensureToken, async (req, res) => {
         
             res.status(200).json({
                // Count: count,
-                Users: data
+                Users: user
             });
         }
     });
