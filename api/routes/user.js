@@ -83,7 +83,7 @@ function ensureToken(req, res, next){
         req.token = bearerToken;
         next();
     } else{
-        res.endStatus(403);
+        res.sendStatus(403);
     }
 }
 
