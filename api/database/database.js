@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'); 
 
 
-const URI = 'mongodb://yeilop44:Fragante44@ds143326.mlab.com:43326/politicalmap';
+const URI = 'mongodb://yeilop44:Fragante44@ds147446.mlab.com:47446/politicalmap';
 //const URI = 'mongodb://localhost:27017/products-shop';
  
 mongoose.connect(URI)
