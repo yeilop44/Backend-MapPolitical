@@ -28,7 +28,7 @@ router.get('/', ensureToken, (req, res) => {
 router.post('/', async (req, res, next) => {
     
     const affiliate = new Affiliate({
-        president: req.body.president,
+        user: req.body.user,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address, 
@@ -47,9 +47,9 @@ router.post('/', async (req, res, next) => {
 });
 
 //getAffiliatesByPresident
-router.get('/:president',async (req, res) => {
-    const president = req.params.president;
-    const affiliate = await Affiliate.find({president: president});
+router.get('/:user',async (req, res) => {
+    const user = req.params.user;
+    const affiliate = await Affiliate.find({user: user});
     const count = affiliate.length; 
     
     res.status(200).json({
@@ -66,7 +66,7 @@ router.put('/:affiliateId', async (req, res) => {
     
     const { affiliateId } = req.params;
 	const affiliate = {
-    	president: req.body.president,
+    	user: req.body.user,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address,
