@@ -93,7 +93,7 @@ router.put('/:affiliateId', async (req, res) => {
 
 
 //getAffiliatesByProfesion
-router.get('/:profession',async (req, res) => {
+router.get('/profession/:profession',async (req, res) => {
     const profession = req.params.profession;
     const affiliate = await Affiliate.find({profession: profession});
     const count = affiliate.length; 
