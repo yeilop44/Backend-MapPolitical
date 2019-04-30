@@ -92,6 +92,24 @@ router.put('/:affiliateId', async (req, res) => {
  });
 
 
+//getAffiliatesByProfesion
+router.get('/:profession',async (req, res) => {
+    const profession = req.params.profession;
+    const affiliate = await Affiliate.find({profession: profession});
+    const count = affiliate.length; 
+    
+    res.status(200).json({
+         message: 'Found Affiliates by profesion',
+         Count: count,
+         Affiliates: affiliate
+     });
+ 
+ });
+ 
+
+
+
+
  function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);
