@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
 
 //getAllUserByUserName
 router.get('/:userName', async (req, res) => {
-    
+    const userName = req.params.userName;
     const user = await User.find({userName: userName});
     const count = user.length;
 
