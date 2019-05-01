@@ -9,7 +9,14 @@ router.post('/signup', async (req, res) => {
     var isExist;
     const user = new User({
         userName: req.body.userName,
-        password: req.body.password
+        password: req.body.password,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        position: req.body.position,
+        place: req.body.place,
+        positionLat: req.body.positionLat,
+        positionLng: req.body.positionLng,
+
     });
 
     const userDB = await User.find();
@@ -62,7 +69,7 @@ router.get('/', async (req, res) => {
     
     const user = await User.find();
     const count = user.length;
-    
+
     res.status(200).json({
         Count: count,
         Users: user
