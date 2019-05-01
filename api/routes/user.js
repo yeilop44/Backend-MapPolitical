@@ -8,7 +8,7 @@ const User = require('../models/user');
 router.post('/signup', async (req, res) => {
     var isExist;
     const user = new User({
-        email: req.body.userName,
+        userName: req.body.userName,
         password: req.body.password
     });
 
