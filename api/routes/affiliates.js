@@ -46,7 +46,7 @@ router.post('/', async (req, res, next) => {
     });
 });
 
-//getAffiliatesByPresident
+//getAffiliatesByUser
 router.get('/:user',async (req, res) => {
     const user = req.params.user;
     const affiliate = await Affiliate.find({user: user});
