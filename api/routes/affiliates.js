@@ -28,7 +28,7 @@ router.get('/', ensureToken, (req, res) => {
 router.post('/', async (req, res, next) => {
     
     const affiliate = new Affiliate({
-        user: req.body.user,
+        userName: req.body.userName,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address, 
