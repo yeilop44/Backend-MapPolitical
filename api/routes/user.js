@@ -77,6 +77,19 @@ router.get('/', async (req, res) => {
        
 });
 
+//getAllUserByUserName
+router.get('/:userName', async (req, res) => {
+    
+    const user = await User.find({userName: userName});
+    const count = user.length;
+
+    res.status(200).json({
+        Count: count,
+        User: user
+    });
+       
+});
+
 function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);
