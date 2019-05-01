@@ -47,9 +47,9 @@ router.post('/', async (req, res, next) => {
 });
 
 //getAffiliatesByUser
-router.get('/:user',async (req, res) => {
-    const user = req.params.user;
-    const affiliate = await Affiliate.find({user: user});
+router.get('/:userName',async (req, res) => {
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
     const count = affiliate.length; 
     
     res.status(200).json({
