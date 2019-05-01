@@ -14,7 +14,7 @@ router.post('/signup', async (req, res) => {
 
     const userDB = await User.find();
     for(let i=0; i<userDB.length; i++){
-        if(userDB[i].email == user.userName){
+        if(userDB[i].userName == user.userName){
             isExist = true
         }else{
             isExist = false;
