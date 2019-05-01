@@ -62,15 +62,10 @@ router.get('/', async (req, res) => {
     
     const user = await User.find();
     const count = user.length;
-    var userEmail =[];
     
-    for(let i=0; i<user.length; i++){
-        userEmail.push(user[i].email);
-    }
-
     res.status(200).json({
         Count: count,
-        Users: userEmail
+        Users: user
     });
        
 });
