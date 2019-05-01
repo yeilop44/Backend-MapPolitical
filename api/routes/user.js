@@ -46,10 +46,10 @@ router.post('/signup', async (req, res) => {
 //Sign In
 router.post('/signin', async (req, res) => {
     
-    var email = req.body.email
+    var userName = req.body.userName
     var password = req.body.password
     
-    const user = await User.find({email:email, password:password});
+    const user = await User.find({userName:userName, password:password});
      if( user.length == 0 || user == null ){
         res.status(401).json({
             message: 'Incorrect user or password XXXXXX'  
