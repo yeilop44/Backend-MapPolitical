@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const Affiliate = require('../models/affiliate');
 
-
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
     
@@ -21,8 +20,6 @@ router.get('/', ensureToken, (req, res) => {
         }
     });     
 });
-
-
 
 //postAffiliate
 router.post('/', async (req, res, next) => {
@@ -60,7 +57,6 @@ router.get('/:userName',async (req, res) => {
  
  });
  
-
 //putAffiliate
 router.put('/:affiliateId', async (req, res) => {
     
@@ -91,7 +87,6 @@ router.put('/:affiliateId', async (req, res) => {
     });
  });
 
-
 //getAffiliatesByProfesion
 router.get('/profession/:profession',async (req, res) => {
     const profession = req.params.profession;
@@ -106,10 +101,7 @@ router.get('/profession/:profession',async (req, res) => {
  
  });
  
-
-
-
-
+//función para solicitar Token
  function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);

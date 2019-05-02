@@ -90,6 +90,7 @@ router.get('/:userName', async (req, res) => {
        
 });
 
+//función para solicitar Token
 function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);
