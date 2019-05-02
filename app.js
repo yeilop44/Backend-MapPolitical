@@ -1,15 +1,12 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const { mongoose } = require('./api/database/database');
 const cors = require('cors');
-
 
 //const bodyParser = require('body-parser');
 
 const affiliateRoutes = require('./api/routes/affiliates'); 
 const userRoutes = require('./api/routes/user'); 
- 
 
 app.use(morgan('dev')); 
 app.use(express.json());
@@ -28,7 +25,6 @@ app.use((req, res, next) => {
     next(error);
 });
 
-
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
@@ -37,6 +33,5 @@ app.use((error, req, res, next) => {
         }
     });
 });
-
 
 module.exports = app; 
