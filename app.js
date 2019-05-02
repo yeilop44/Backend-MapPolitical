@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const { mongoose } = require('./api/database/database');
 const cors = require('cors');
 
 //const bodyParser = require('body-parser');
@@ -13,7 +14,7 @@ app.use(express.json());
 //app.use(bodyParser.urlencoded({extended: false}));
 //app.use(bodyParser.json());
 app.use(cors());
-app.use(cors({origin: 'http://localhost:4200/login'}));
+app.use(cors({origin: 'http://localhost:4200'}));
 
 //Routes
 app.use('/affiliates', affiliateRoutes);
