@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const Affiliate = require('../models/affiliate');
 
-
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
     
@@ -22,13 +21,11 @@ router.get('/', ensureToken, (req, res) => {
     });     
 });
 
-
-
 //postAffiliate
 router.post('/', async (req, res, next) => {
     
     const affiliate = new Affiliate({
-        president: req.body.president,
+        userName: req.body.userName,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address, 
@@ -46,10 +43,10 @@ router.post('/', async (req, res, next) => {
     });
 });
 
-//getAffiliatesByPresident
-router.get('/:president',async (req, res) => {
-    const president = req.params.president;
-    const affiliate = await Affiliate.find({president: president});
+//getAffiliatesByUser
+router.get('/:userName',async (req, res) => {
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
     const count = affiliate.length; 
     
     res.status(200).json({
@@ -60,13 +57,12 @@ router.get('/:president',async (req, res) => {
  
  });
  
-
 //putAffiliate
 router.put('/:affiliateId', async (req, res) => {
     
     const { affiliateId } = req.params;
 	const affiliate = {
-    	president: req.body.president,
+    	user: req.body.user,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address,
@@ -91,7 +87,21 @@ router.put('/:affiliateId', async (req, res) => {
     });
  });
 
-
+//getAffiliatesByProfesion
+router.get('/profession/:profession',async (req, res) => {
+    const profession = req.params.profession;
+    const affiliate = await Affiliate.find({profession: profession});
+    const count = affiliate.length; 
+    
+    res.status(200).json({
+         message: 'Found Affiliates by profesion',
+         Count: count,
+         Affiliates: affiliate
+     });
+ 
+ });
+ 
+//función para solicitar Token
  function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);

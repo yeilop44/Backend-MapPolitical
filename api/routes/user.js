@@ -8,13 +8,20 @@ const User = require('../models/user');
 router.post('/signup', async (req, res) => {
     var isExist;
     const user = new User({
-        email: req.body.email,
-        password: req.body.password
+        userName: req.body.userName,
+        password: req.body.password,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        position: req.body.position,
+        place: req.body.place,
+        positionLat: req.body.positionLat,
+        positionLng: req.body.positionLng,
+
     });
 
     const userDB = await User.find();
     for(let i=0; i<userDB.length; i++){
-        if(userDB[i].email == user.email){
+        if(userDB[i].userName == user.userName){
             isExist = true
         }else{
             isExist = false;
@@ -24,7 +31,7 @@ router.post('/signup', async (req, res) => {
     if(isExist){
         res.status(400).json({
             message: "User Exist",
-            User: user.email
+            User: user.userName
         }); 
     }else{
         await user.save()
@@ -39,10 +46,10 @@ router.post('/signup', async (req, res) => {
 //Sign In
 router.post('/signin', async (req, res) => {
     
-    var email = req.body.email
+    var userName = req.body.userName
     var password = req.body.password
     
-    const user = await User.find({email:email, password:password});
+    const user = await User.find({userName:userName, password:password});
      if( user.length == 0 || user == null ){
         res.status(401).json({
             message: 'Incorrect user or password XXXXXX'  
@@ -58,27 +65,32 @@ router.post('/signin', async (req, res) => {
 });
 
 //getAllUsers
-router.get('/', ensureToken, async (req, res) => {
-    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
-        if(err){
-            res.sendStatus(403);
-        }else{
-            const user = await User.find();
-            const count = user.length;
-            var userEmail =[];
-            
-            for(let i=0; i<user.length; i++){
-                userEmail.push(user[i].email);
-            }
-        
-            res.status(200).json({
-                Count: count,
-                Users: userEmail
-            });
-        }
+router.get('/', async (req, res) => {
+    
+    const user = await User.find();
+    const count = user.length;
+
+    res.status(200).json({
+        Count: count,
+        Users: user
     });
+       
 });
 
+//getAllUserByUserName
+router.get('/:userName', async (req, res) => {
+    const userName = req.params.userName;
+    const user = await User.find({userName: userName});
+    const count = user.length;
+
+    res.status(200).json({
+        Count: count,
+        User: user
+    });
+       
+});
+
+//función para solicitar Token
 function ensureToken(req, res, next){
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);
