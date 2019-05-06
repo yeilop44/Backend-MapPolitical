@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 //Sign Up
 router.post('/signup', async (req, res) => {
-    var isExist;
+
     const user = new User({
         userName: req.body.userName,
         password: req.body.password,
@@ -19,16 +19,8 @@ router.post('/signup', async (req, res) => {
 
     });
 
-    const userDB = await User.find();
-    for(let i=0; i<userDB.length; i++){
-        if(userDB[i].userName == user.userName){
-            isExist = true
-        }else{
-            isExist = false;
-        }
-    }
-    
-    if(isExist){
+    const userFind = await User.findOne({userName: user.userName});
+    if(userFind){
         res.status(400).json({
             message: "User Exist",
             User: user.userName
@@ -37,7 +29,7 @@ router.post('/signup', async (req, res) => {
         await user.save()
         res.status(200).json({
             message: "User Created",
-            User: user
+            User: user.userName
         }); 
     }  
         
