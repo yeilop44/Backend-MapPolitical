@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require ('bcrypt');
 
 const User = require('../models/user');
 
 //Sign Up
 router.post('/signup', async (req, res) => {
 
-    const user = new User({
+     var user = new User({
         userName: req.body.userName,
         password: req.body.password,
         names: req.body.names,
@@ -19,18 +20,27 @@ router.post('/signup', async (req, res) => {
 
     });
 
+    
     const userFind = await User.findOne({userName: user.userName});
     if(userFind){
+        console.log("user exist");
         res.status(400).json({
             message: "User Exist",
             User: user.userName
         }); 
     }else{
-        await user.save()
-        res.status(200).json({
-            message: "User Created",
-            User: user.userName
-        }); 
+        bcrypt.hash(user.password, 10, async (err, data) => {
+            user.password = data;
+            await user.save()
+            console.log(user.password);
+            console.log("user created");
+            res.status(200).json({
+                message: "User Created",
+                User: user.userName,
+                password: user.password
+            }); 
+        });
+        
     }  
         
 });
@@ -41,18 +51,31 @@ router.post('/signin', async (req, res) => {
     var userName = req.body.userName
     var password = req.body.password
     
-    const user = await User.find({userName:userName, password:password});
-     if( user.length == 0 || user == null ){
+    const user = await User.findOne({userName:userName});
+    console.log(user); 
+    if(!user){
         res.status(401).json({
-            message: 'Incorrect user or password XXXXXX'  
+            message: 'Incorrect user or password'  
         });
      }else{
-        const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
-        res.status(200).json({
-            ok: 'true',
-            User: user[0].userName,
-            token: token
-        });
+        await bcrypt.compare(password, user.password,  (err, result) => {
+             if (result){
+                const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
+                res.status(200).json({
+                    ok: 'true',
+                    User: user.userName,
+                    passwordHash: user.password,
+                    token: token
+                    
+                });
+             }else{
+                res.status(401).json({
+                    message: 'Incorrect password'  
+                });
+
+             }
+         })
+        
      }
 });
 
