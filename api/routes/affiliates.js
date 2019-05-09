@@ -62,7 +62,7 @@ router.put('/:affiliateId', async (req, res) => {
     
     const { affiliateId } = req.params;
 	const affiliate = {
-    	user: req.body.user,
+    	userName: req.body.userName,
         date: req.body.date,
         fullName: req.body.fullName,
         address: req.body.address,
@@ -102,8 +102,9 @@ router.get('/profession/:profession',async (req, res) => {
  });
  //countProfession
 router.get('/count/profession',async(req, res) => {
-	const aggregatorOpts = [{	
-        $group: {_id: "$profession", count: { $sum: 1 }}
+	const aggregatorOpts = [
+        {$match : { userName: "mgonzalez" }},
+        {$group: {_id: "$profession", count: { $sum: 1 }}
     }]
 	var profession = await Affiliate.aggregate(aggregatorOpts).exec()
 	res.json({
