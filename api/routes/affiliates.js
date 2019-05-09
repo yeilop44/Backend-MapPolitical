@@ -100,6 +100,21 @@ router.get('/profession/:profession',async (req, res) => {
      });
  
  });
+ //countProfession
+router.get('count/profession',async(req, res) => {
+
+	const aggregatorOpts = [{	
+        $group: {_id: "$profession", count: { $sum: 1 }}
+    }]
+
+	var profesions = await Affiliate.aggregate(aggregatorOpts).exec()
+	console.log(x);
+
+	res.json({
+		origin: profesions
+	});
+
+});  
  
 //función para solicitar Token
  function ensureToken(req, res, next){
@@ -114,5 +129,6 @@ router.get('/profession/:profession',async (req, res) => {
         res.sendStatus(403);
     }
 }
+
 
 module.exports = router;
