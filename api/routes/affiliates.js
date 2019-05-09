@@ -101,7 +101,7 @@ router.get('/profession/:profession',async (req, res) => {
  
  });
  //countProfession
-router.get('count/profession',async(req, res) => {
+router.get('/count/profession',async(req, res) => {
 
 	const aggregatorOpts = [{	
         $group: {_id: "$profession", count: { $sum: 1 }}
@@ -111,7 +111,7 @@ router.get('count/profession',async(req, res) => {
 	console.log(x);
 
 	res.json({
-		origin: profesions
+		profesions: profesions
 	});
 
 });  
