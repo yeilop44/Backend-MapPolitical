@@ -102,16 +102,12 @@ router.get('/profession/:profession',async (req, res) => {
  });
  //countProfession
 router.get('/count/profession',async(req, res) => {
-
 	const aggregatorOpts = [{	
         $group: {_id: "$profession", count: { $sum: 1 }}
     }]
-
-	var profesions = await Affiliate.aggregate(aggregatorOpts).exec()
-	console.log(x);
-
+	var profession = await Affiliate.aggregate(aggregatorOpts).exec()
 	res.json({
-		profesions: profesions
+		profesions: profession
 	});
 
 });  
