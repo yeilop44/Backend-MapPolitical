@@ -26,15 +26,28 @@ router.post('/', async (req, res, next) => {
     
     const affiliate = new Affiliate({
         userName: req.body.userName,
-        date: req.body.date,
-        fullName: req.body.fullName,
+        birthdate: req.body.date,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        sex: req.body.sex,
+        zone: req.body.zone,
+        subdivision: req.body.subdivision,
         address: req.body.address, 
+        municipality: req.body.municipality,
+        votingTable: req.body.votingTable,
+        votingStation: req.body.votingStation,
+        votingPlace: req.body.votingPlace,
+        leader: req.body.leader,
         positionLat: req.body.positionLat,
         positionLng: req.body.positionLng,   
         profession: req.body.profession,
+        occupation: req.body.occupation,
+        church: req.body.church,
+        lgtbi: req.body.lgtbi,
+        disability: req.body.disability,
         phone: req.body.phone,
         identification: req.body.identification,
-        observations: req.body.observations
+        familyNumber: req.body.familyNumber
     });
     await affiliate.save()
     res.status(200).json({
@@ -63,13 +76,28 @@ router.put('/:affiliateId', async (req, res) => {
     const { affiliateId } = req.params;
 	const affiliate = {
     	userName: req.body.userName,
-        date: req.body.date,
-        fullName: req.body.fullName,
-        address: req.body.address,
+        birthdate: req.body.date,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        sex: req.body.sex,
+        zone: req.body.zone,
+        subdivision: req.body.subdivision,
+        address: req.body.address, 
+        municipality: req.body.municipality,
+        votingTable: req.body.votingTable,
+        votingStation: req.body.votingStation,
+        votingPlace: req.body.votingPlace,
+        leader: req.body.leader,
+        positionLat: req.body.positionLat,
+        positionLng: req.body.positionLng,   
         profession: req.body.profession,
+        occupation: req.body.occupation,
+        church: req.body.church,
+        lgtbi: req.body.lgtbi,
+        disability: req.body.disability,
         phone: req.body.phone,
         identification: req.body.identification,
-        observations: req.body.observations
+        familyNumber: req.body.familyNumber
 	}
 
 	await Affiliate.findByIdAndUpdate(affiliateId, {$set: affiliate}, {new: true});
