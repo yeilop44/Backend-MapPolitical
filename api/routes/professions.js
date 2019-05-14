@@ -17,7 +17,7 @@ router.post('/', async (req, res, next) => {
 });
 
 //getAllProfessions
-router.get('/',  (req, res) => {
+router.get('/', async (req, res) => {
 
     const profession = await Profession.find();
     const count = profession.length; 
