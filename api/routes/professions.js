@@ -26,3 +26,5 @@ router.get('/', async (req, res) => {
         Items: profession
     });     
 });
+
+module.exports = router;
