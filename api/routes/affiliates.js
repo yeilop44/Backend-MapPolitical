@@ -128,6 +128,7 @@ router.get('/profession/:profession',async (req, res) => {
      });
  
  });
+
  //countProfession
 router.get('/count/profession/:userName',async(req, res) => {
     const userName = req.params.userName;
@@ -139,8 +140,20 @@ router.get('/count/profession/:userName',async(req, res) => {
 	res.json({
 		profesions: profession
 	});
+});
 
-});  
+ //countOccupation
+ router.get('/count/occupation/:userName',async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$occupation", count: { $sum: 1 }}
+    }]
+	var occupation = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		occupations: occupation
+	});
+}); 
  
 //función para solicitar Token
  function ensureToken(req, res, next){
