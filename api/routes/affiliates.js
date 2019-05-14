@@ -76,7 +76,7 @@ router.put('/:affiliateId', async (req, res) => {
     const { affiliateId } = req.params;
 	const affiliate = {
     	userName: req.body.userName,
-        birthdate: req.body.date,
+        birthdate: req.body.birthdate,
         names: req.body.names,
         surnames: req.body.surnames,
         sex: req.body.sex,
