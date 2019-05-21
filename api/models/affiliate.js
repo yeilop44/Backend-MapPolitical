@@ -22,7 +22,7 @@ const affiliateSchema = new Schema({
 	church: {type: String},
 	lgtbi: {type: Boolean},
 	disability: {type: Boolean},
-	phone: {type: Number, required: true},
+	phone: {type: Number},
 	identification: {type: Number, required: true},
 	familyNumber: {type: Number}
 })
