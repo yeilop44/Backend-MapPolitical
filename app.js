@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const affiliateRoutes = require('./api/routes/affiliates'); 
 const userRoutes = require('./api/routes/user'); 
-const professionRoutes = require('./api/routes/listMaster'); 
+const listMasterRoutes = require('./api/routes/listMaster'); 
 
 app.use(morgan('dev')); 
 app.use(express.json());
@@ -20,7 +20,7 @@ app.use(cors({origin: 'http://localhost:4200'}));
 //Routes
 app.use('/affiliates', affiliateRoutes);
 app.use('/user', userRoutes);
-app.use('/professions', professionRoutes);
+app.use('/listMaster', listMasterRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
