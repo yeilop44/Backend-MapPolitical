@@ -7,4 +7,4 @@ const listMasterSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('Profession', listMasterSchema);
+module.exports = mongoose.model('ListMaster', listMasterSchema);
