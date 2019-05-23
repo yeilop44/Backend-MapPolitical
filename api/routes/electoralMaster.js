@@ -19,10 +19,10 @@ router.post('/', async (req, res, next) => {
     });
 });
 
-//getAll
-router.get('/', async (req, res) => {
-
-    const electoralMaster = await ElectoralMaster.find();
+//getAllByUser
+router.get('/:userName', async (req, res) => {
+    const userName = req.params.userName;
+    const electoralMaster = await ElectoralMaster.find({userName: userName});
     const count = electoralMaster.length; 
     res.status(200).json({
         Count: count,
