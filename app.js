@@ -10,6 +10,7 @@ const affiliateRoutes = require('./api/routes/affiliates');
 const userRoutes = require('./api/routes/user'); 
 const listMasterRoutes = require('./api/routes/listMaster'); 
 const electoralMasterRoutes = require('./api/routes/electoralMaster'); 
+const geographyMasterRoutes = require('./api/routes/geographyMaster'); 
 
 app.use(morgan('dev')); 
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use('/affiliates', affiliateRoutes);
 app.use('/user', userRoutes);
 app.use('/listMaster', listMasterRoutes);
 app.use('/electoralMaster', electoralMasterRoutes);
+app.use('/geographyMaster', geographyMasterRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
