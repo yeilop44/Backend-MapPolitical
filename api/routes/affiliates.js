@@ -168,6 +168,18 @@ router.get('/count/profession/:userName',async(req, res) => {
 	});
 }); 
  
+//countSubdivision
+router.get('/count/subdivision/:userName', async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$subdivision", count: { $sum: 1 }}
+    }]
+	var subdivision = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		subdivisions: subdivision
+	});
+}); 
  
 //función para solicitar Token
  function ensureToken(req, res, next){
