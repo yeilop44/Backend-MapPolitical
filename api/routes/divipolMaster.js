@@ -13,12 +13,12 @@ router.post('/', async (req, res, next) => {
     });
     await divipolMaster.save()
     res.status(200).json({
-        message: "GeographyMaster Created",
+        message: "Master Created",
         DivipolMaster: divipolMaster
     });
 });
 
-//getAllB
+//getAll
 router.get('/', async (req, res) => {
   
     const divipolMaster = await DivipolMaster.find();
