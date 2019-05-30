@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const divipolMasterSchema = new Schema({	
 	state: { type: String, required: true},
-	municipality: [{name: String, required: true}],
+	municipality: {type: Array, "default": []},
 		
 });
 
