@@ -8,6 +8,8 @@ router.post('/', async (req, res, next) => {
     
     const electoralMaster = new ElectoralMaster({    
         userName: req.body.userName,
+        state: req.body.state,
+        municipality: req.body.municipality,
         votingStation: req.body.votingStation,
         votingPlace: req.body.votingPlace,
         numberTables: req.body.numberTables        
