@@ -8,6 +8,8 @@ router.post('/', async (req, res, next) => {
     
     const geographyMaster = new GeographyMaster({    
         userName: req.body.userName,
+        state: req.body.state,
+        municipality: req.body.municipality,
         zone: req.body.zone,
         subdivision: req.body.subdivision        
     });
