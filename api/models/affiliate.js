@@ -10,6 +10,7 @@ const affiliateSchema = new Schema({
 	zone: {type: String},
 	subdivision: {type: String},
 	address: {type: String},
+	state: {type: String},
 	municipality: {type: String},
 	votingTable: {type: String},
 	votingStation: {type: String},
