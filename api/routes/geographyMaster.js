@@ -31,4 +31,32 @@ router.get('/:userName', async (req, res) => {
     });     
 });
 
+//putAffiliate
+router.put('/:geographyId', async (req, res) => {
+    
+    const { geographyId } = req.params;
+	const geographyMaster = {
+        userName: req.body.userName,       
+        state: req.body.state,
+        municipality: req.body.municipality,  
+        zone: req.body.zone,
+        subdivision: req.body.subdivision,                      
+	}
+
+	await GeographyMaster.findByIdAndUpdate(geographyId, {$set: geographyMaster}, {new: true});
+    res.status(200).json({
+        message: 'Updated geogaphy',
+        Affiliate: geographyMaster
+    });
+ });
+
+ //deleteAffiliate
+ router.delete('/:geographyId', async (req, res) => {
+    await GeographyMaster.findByIdAndRemove(req.params.geographyId);
+    res.status(200).json({
+        message: 'Deleted geography'
+    });
+ });
+
+
 module.exports = router;
