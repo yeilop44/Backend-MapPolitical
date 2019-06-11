@@ -32,4 +32,34 @@ router.get('/:userName', async (req, res) => {
     });     
 });
 
+//put
+router.put('/:electoralId', async (req, res) => {
+    
+    const { electoralId } = req.params;
+	const electoralMaster = {
+        userName: req.body.userName,       
+        state: req.body.state,
+        votingStation: req.body.votingStation,  
+        votingPlace: req.body.votingPlace,
+       numberTables: req.body.numberTables,                      
+	}
+
+	await ElectoralMaster.findByIdAndUpdate(electoralId, {$set: electoralMaster}, {new: true});
+    res.status(200).json({
+        message: 'Updated electoral',
+        Electoral: electoralMaster
+    });
+ });
+
+ //delete
+ router.delete('/:electoralId', async (req, res) => {
+    await ElectoralMaster.findByIdAndRemove(req.params.electoralId);
+    res.status(200).json({
+        message: 'Deleted electoral'
+    });
+ });
+
+
+
+
 module.exports = router;

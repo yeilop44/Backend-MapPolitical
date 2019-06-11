@@ -31,7 +31,7 @@ router.get('/:userName', async (req, res) => {
     });     
 });
 
-//putAffiliate
+//put
 router.put('/:geographyId', async (req, res) => {
     
     const { geographyId } = req.params;
@@ -50,7 +50,7 @@ router.put('/:geographyId', async (req, res) => {
     });
  });
 
- //deleteAffiliate
+ //delete
  router.delete('/:geographyId', async (req, res) => {
     await GeographyMaster.findByIdAndRemove(req.params.geographyId);
     res.status(200).json({
