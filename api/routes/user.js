@@ -99,11 +99,11 @@ router.post('/changepass', async (req, res) => {
    if(userFind){       
         await bcrypt.compare(currentpass, userFind.password,  (err, result) => {        
             if (result){
-                console.log("la contraseña actual está errada");
+                console.log("la contraseña actual es correcta");
                 if(newpass === newpassconfirm){
                     var user = new User({
                         userName = username,
-                        password = newpass                
+                        password = newpas                
                     });
                     await user.save();
                     res.status(200).json({                        
