@@ -102,17 +102,15 @@ router.post('/changepass', async (req, res) => {
    if(userFind){       
         await bcrypt.compare(user.password, userFind.password,  async (err, result) => {        
             if (result){
-                console.log( userFind._id + "la contraseña actual es correcta");
+                console.log("la contraseña actual es correcta");
                 if(newpass === newpassconfirm){
                     user.password = newpass;
                     bcrypt.hash(user.password, 10, async (err, data) => {
-                        await User.updateOne({ _id: userFind._id },{$set:{password: newpass}}, {upsert:true});
+                        await User.updateOne({ _id: userFind._id },{$set:{password: data}}, {upsert:true});
                             res.status(200).json({                        
                             message: 'password chaneged sucessfull'  
                             });
-                    });
-                    
-                    
+                    });                                        
                 }else{
                     res.status(401).json({       
                         message: 'la contraseña nueva no coinciden'  
