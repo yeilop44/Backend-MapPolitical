@@ -66,30 +66,72 @@ router.post('/signin', async (req, res) => {
                             ok: 'true',
                             User: user.userName,
                             passwordHash: user.password,
-                            token: token
-                            
+                            token: token                            
                         });
                     }else{
                         res.status(401).json({
                         ok: 'false',
                         message: 'Incorrect password'  
-                        });
-    
+                        });    
                     }
                 })
          
             } catch (error) {
                 console.log(error);
                 res.status(500).send(`something wen't wrong`);
-            }
-                       
+            }                       
         }
     } catch (error) {
         console.log(error);
         res.status(500).send(`something wen't wrong`);
-    }
-    
+    }    
 });
+
+//change password
+router.post('/changepass', async (req, res) => {
+   
+    var username =  req.body.userName;
+    var currentpass =  req.body.currentpass;
+    var newpass = req.body.newpass;
+    var newpassconfirm = req.body.newpassconfirm;   
+   
+   const userFind = await User.findOne({userName: username});
+   if(userFind){       
+        await bcrypt.compare(currentpass, userFind.password,  (err, result) => {        
+            if (result){
+                console.log("la contraseña actual está errada");
+                if(newpass === newpassconfirm){
+                    var user = new User({
+                        userName = username,
+                        password = newpass                
+                    });
+                    await user.save();
+                    res.status(200).json({                        
+                        message: 'password chaneged sucessfull'  
+                    });
+                }else{
+                    res.status(401).json({       
+                        message: 'la contraseña nueva no coinciden'  
+                    });
+
+                }
+            }else{
+                res.status(401).json({
+                ok: 'false',
+                message: 'Incorrect currente password'  
+                });    
+            }
+        });  
+   }else{ 
+        res.status(401).json({       
+            message: 'No existe el usuario'  
+        });       
+   }  
+       
+});
+
+
+
 
 //getAllUsers
 router.get('/', async (req, res) => {
