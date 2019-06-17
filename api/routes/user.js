@@ -47,37 +47,48 @@ router.post('/signup', async (req, res) => {
 
 //Sign In
 router.post('/signin', async (req, res) => {
+    try {
+        var userName = req.body.userName
+        var password = req.body.password    
+        const user = await User.findOne({userName:userName});
+        console.log(user); 
+        if(!user){
+            res.status(401).json({
+                message: 'Incorrect user or password'  
+            });
+        }else{
+            try {
+                await bcrypt.compare(password, user.password,  (err, result) => {
+                    if(err) throw err; 
+                    if (result){
+                        const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
+                        res.status(200).json({
+                            ok: 'true',
+                            User: user.userName,
+                            passwordHash: user.password,
+                            token: token
+                            
+                        });
+                    }else{
+                        res.status(401).json({
+                        ok: 'false',
+                        message: 'Incorrect password'  
+                        });
     
-    var userName = req.body.userName
-    var password = req.body.password
+                    }
+                })
+         
+            } catch (error) {
+                console.log(error);
+                res.status(500).send(`something wen't wrong`);
+            }
+                       
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(`something wen't wrong`);
+    }
     
-    const user = await User.findOne({userName:userName});
-    console.log(user); 
-    if(!user){
-        res.status(401).json({
-            message: 'Incorrect user or password'  
-        });
-     }else{
-        await bcrypt.compare(password, user.password,  (err, result) => {
-             if (result){
-                const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
-                res.status(200).json({
-                    ok: 'true',
-                    User: user.userName,
-                    passwordHash: user.password,
-                    token: token
-                    
-                });
-             }else{
-                res.status(401).json({
-                   ok: 'false',
-                    message: 'Incorrect password'  
-                });
-
-             }
-         })
-        
-     }
 });
 
 //getAllUsers
