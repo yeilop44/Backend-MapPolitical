@@ -90,35 +90,37 @@ router.post('/signin', async (req, res) => {
 //change password
 router.post('/changepass', async (req, res) => {
    
-    var username =  req.body.userName;
-    var currentpass =  req.body.currentpass;
+    var user = new User({
+        userName: req.body.userName,
+        password: req.body.currentpass                
+    });
+    
     var newpass = req.body.newpass;
     var newpassconfirm = req.body.newpassconfirm;   
    
-   const userFind = await User.findOne({userName: username});
+   const userFind = await User.findOne({userName: user.userName});
    if(userFind){       
-        await bcrypt.compare(currentpass, userFind.password,  (err, result) => {        
+        await bcrypt.compare(user.password, userFind.password,  async (err, result) => {        
             if (result){
-                console.log("la contraseña actual es correcta");
+                console.log( userFind._id + "la contraseña actual es correcta");
                 if(newpass === newpassconfirm){
-                    var user = new User({
-                        userName = username,
-                        password = newpas                
+                    user.password = newpass;
+                    bcrypt.hash(user.password, 10, async (err, data) => {
+                        await User.updateOne({ _id: userFind._id },{$set:{password: newpass}}, {upsert:true});
+                            res.status(200).json({                        
+                            message: 'password chaneged sucessfull'  
+                            });
                     });
-                    await user.save();
-                    res.status(200).json({                        
-                        message: 'password chaneged sucessfull'  
-                    });
+                    
+                    
                 }else{
                     res.status(401).json({       
                         message: 'la contraseña nueva no coinciden'  
                     });
-
                 }
             }else{
-                res.status(401).json({
-                ok: 'false',
-                message: 'Incorrect currente password'  
+                res.status(401).json({                
+                message: 'Incorrect current password'  
                 });    
             }
         });  
@@ -126,8 +128,7 @@ router.post('/changepass', async (req, res) => {
         res.status(401).json({       
             message: 'No existe el usuario'  
         });       
-   }  
-       
+   }         
 });
 
 
