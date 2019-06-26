@@ -182,6 +182,23 @@ router.get('/count/subdivision/:userName', async(req, res) => {
 		subdivisions: subdivision
 	});
 }); 
+
+//getAffiliatesByLeader
+router.get('/:userName/leader/:leader',async (req, res) => {
+    const userName = req.params.userName;
+    const leader = req.params.leader;
+    const affiliate = await Affiliate.find({userName: userName, leader: leader});
+    const count = affiliate.length; 
+    
+    res.status(200).json({         
+         Count: count,
+         Affiliates: affiliate
+     });
+ 
+ });
+
+
+
  
 //función para solicitar Token
  function ensureToken(req, res, next){
