@@ -26,20 +26,34 @@ router.post('/', async (req, res, next) => {
     
     const affiliate = new Affiliate({
         userName: req.body.userName,
-        date: req.body.date,
-        fullName: req.body.fullName,
+        birthdate: req.body.birthdate,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        sex: req.body.sex,
+        zone: req.body.zone,
+        subdivision: req.body.subdivision,
         address: req.body.address, 
+        state: req.body.state,
+        municipality: req.body.municipality,
+        votingTable: req.body.votingTable,
+        votingStation: req.body.votingStation,
+        votingPlace: req.body.votingPlace,
+        leader: req.body.leader,
         positionLat: req.body.positionLat,
         positionLng: req.body.positionLng,   
         profession: req.body.profession,
+        occupation: req.body.occupation,
+        church: req.body.church,
+        lgtbi: req.body.lgtbi,
+        disability: req.body.disability,
         phone: req.body.phone,
         identification: req.body.identification,
-        observations: req.body.observations
+        familyNumber: req.body.familyNumber
     });
     await affiliate.save()
     res.status(200).json({
         message: "Affiliate Created",
-        Product: affiliate
+        Affiliate: affiliate
     });
 });
 
@@ -62,14 +76,30 @@ router.put('/:affiliateId', async (req, res) => {
     
     const { affiliateId } = req.params;
 	const affiliate = {
-    	user: req.body.user,
-        date: req.body.date,
-        fullName: req.body.fullName,
-        address: req.body.address,
+    	userName: req.body.userName,
+        birthdate: req.body.birthdate,
+        names: req.body.names,
+        surnames: req.body.surnames,
+        sex: req.body.sex,
+        zone: req.body.zone,
+        subdivision: req.body.subdivision,
+        address: req.body.address, 
+        state: req.body.state,
+        municipality: req.body.municipality,
+        votingTable: req.body.votingTable,
+        votingStation: req.body.votingStation,
+        votingPlace: req.body.votingPlace,
+        leader: req.body.leader,
+        positionLat: req.body.positionLat,
+        positionLng: req.body.positionLng,   
         profession: req.body.profession,
+        occupation: req.body.occupation,
+        church: req.body.church,
+        lgtbi: req.body.lgtbi,
+        disability: req.body.disability,
         phone: req.body.phone,
         identification: req.body.identification,
-        observations: req.body.observations
+        familyNumber: req.body.familyNumber
 	}
 
 	await Affiliate.findByIdAndUpdate(affiliateId, {$set: affiliate}, {new: true});
@@ -100,6 +130,75 @@ router.get('/profession/:profession',async (req, res) => {
      });
  
  });
+
+ //countProfession
+router.get('/count/profession/:userName',async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$profession", count: { $sum: 1 }}
+    }]
+	var profession = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		profesions: profession
+	});
+});
+
+ //countOccupation
+ router.get('/count/occupation/:userName', async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$occupation", count: { $sum: 1 }}
+    }]
+	var occupation = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		occupations: occupation
+	});
+}); 
+
+ //countZone
+ router.get('/count/zone/:userName', async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$zone", count: { $sum: 1 }}
+    }]
+	var zone = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		zones: zone
+	});
+}); 
+ 
+//countSubdivision
+router.get('/count/subdivision/:userName', async(req, res) => {
+    const userName = req.params.userName;
+    const aggregatorOpts = [
+        {$match : { userName: userName }},
+        {$group: {_id: "$subdivision", count: { $sum: 1 }}
+    }]
+	var subdivision = await Affiliate.aggregate(aggregatorOpts).exec()
+	res.json({
+		subdivisions: subdivision
+	});
+}); 
+
+//getAffiliatesByLeader
+router.get('/:userName/leader/:leader',async (req, res) => {
+    const userName = req.params.userName;
+    const leader = req.params.leader;
+    const affiliate = await Affiliate.find({userName: userName, leader: leader});
+    const count = affiliate.length; 
+    
+    res.status(200).json({         
+         Count: count,
+         Affiliates: affiliate
+     });
+ 
+ });
+
+
+
  
 //función para solicitar Token
  function ensureToken(req, res, next){
@@ -114,5 +213,6 @@ router.get('/profession/:profession',async (req, res) => {
         res.sendStatus(403);
     }
 }
+
 
 module.exports = router;

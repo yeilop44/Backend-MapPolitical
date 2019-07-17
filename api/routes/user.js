@@ -47,37 +47,90 @@ router.post('/signup', async (req, res) => {
 
 //Sign In
 router.post('/signin', async (req, res) => {
-    
-    var userName = req.body.userName
-    var password = req.body.password
-    
-    const user = await User.findOne({userName:userName});
-    console.log(user); 
-    if(!user){
-        res.status(401).json({
-            message: 'Incorrect user or password'  
-        });
-     }else{
-        await bcrypt.compare(password, user.password,  (err, result) => {
-             if (result){
-                const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
-                res.status(200).json({
-                    ok: 'true',
-                    User: user.userName,
-                    passwordHash: user.password,
-                    token: token
-                    
-                });
-             }else{
-                res.status(401).json({
-                    message: 'Incorrect password'  
-                });
-
-             }
-         })
-        
-     }
+    try {
+        var userName = req.body.userName
+        var password = req.body.password    
+        const user = await User.findOne({userName:userName});
+        console.log(user); 
+        if(!user){
+            res.status(401).json({
+                message: 'Incorrect user or password'  
+            });
+        }else{
+            try {
+                await bcrypt.compare(password, user.password,  (err, result) => {
+                    if(err) throw err; 
+                    if (result){
+                        const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
+                        res.status(200).json({
+                            ok: 'true',
+                            User: user.userName,
+                            passwordHash: user.password,
+                            token: token                            
+                        });
+                    }else{
+                        res.status(401).json({
+                        ok: 'false',
+                        message: 'Incorrect password'  
+                        });    
+                    }
+                })
+         
+            } catch (error) {
+                console.log(error);
+                res.status(500).send(`something wen't wrong`);
+            }                       
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(`something wen't wrong`);
+    }    
 });
+
+//change password
+router.post('/changepass', async (req, res) => {
+   
+    var user = new User({
+        userName: req.body.userName,
+        password: req.body.currentpass                
+    });
+    
+    var newpass = req.body.newpass;
+    var newpassconfirm = req.body.newpassconfirm;   
+   
+   const userFind = await User.findOne({userName: user.userName});
+   if(userFind){       
+        await bcrypt.compare(user.password, userFind.password,  async (err, result) => {        
+            if (result){
+                console.log("la contraseña actual es correcta");
+                if(newpass === newpassconfirm){
+                    user.password = newpass;
+                    bcrypt.hash(user.password, 10, async (err, data) => {
+                        await User.updateOne({ _id: userFind._id },{$set:{password: data}}, {upsert:true});
+                            res.status(200).json({                        
+                            message: 'password chaneged sucessfull'  
+                            });
+                    });                                        
+                }else{
+                    res.status(401).json({       
+                        message: 'la contraseña nueva no coinciden'  
+                    });
+                }
+            }else{
+                res.status(401).json({                
+                message: 'Incorrect current password'  
+                });    
+            }
+        });  
+   }else{ 
+        res.status(401).json({       
+            message: 'No existe el usuario'  
+        });       
+   }         
+});
+
+
+
 
 //getAllUsers
 router.get('/', async (req, res) => {

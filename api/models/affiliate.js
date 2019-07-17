@@ -3,15 +3,29 @@ const { Schema } = mongoose;
 
 const affiliateSchema = new Schema({
 	userName: { type: String, required: true},
-	date: { type: String, required: true},
-	fullName: {type: String, required: true},
-	address: {type: String, required: true},
-	positionLat: {type: Number, required: true},
-	positionLng: {type: Number, required: true},	
-	profession: {type: String, required: true},
-	phone: {type: Number, required: true},
+	birthdate: { type: String, required: true},
+	names: {type: String, required: true},
+	surnames: {type: String, required: true},
+	sex: {type: String},
+	zone: {type: String},
+	subdivision: {type: String},
+	address: {type: String},
+	state: {type: String},
+	municipality: {type: String},
+	votingTable: {type: String},
+	votingStation: {type: String},
+	votingPlace: {type: String},
+	leader: {type: String},
+	positionLat: {type: Number},
+	positionLng: {type: Number},	
+	profession: {type: String},
+	occupation: {type: String},
+	church: {type: String},
+	lgtbi: {type: Boolean},
+	disability: {type: Boolean},
+	phone: {type: Number},
 	identification: {type: Number, required: true},
-	observations: {type: String}
+	familyNumber: {type: Number}
 })
 
 
