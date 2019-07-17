@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-
 const Affiliate = require('../models/affiliate');
+const { userSession } = require('./user');
 
 //getAllAffiliates
-router.get('/', ensureToken, (req, res) => {
+/*router.get('/', ensureToken, (req, res) => {
     
     jwt.verify(req.token, 'my_secret_key', async (err, data) => {
         if(err){
@@ -19,7 +19,26 @@ router.get('/', ensureToken, (req, res) => {
             });
         }
     });     
+});*/
+
+router.get('/',  async (req, res) => {    
+    if(!req.session.user){
+        res.send(`no logeado ${req.session.user}`)
+    }else{
+        req.session.cuenta = req.session.cuenta? req.session.cuenta +1: 1;
+        var y = req.session.user;
+        var x = req.session.cuenta;
+        const affiliate = await Affiliate.find();
+        const count = affiliate.length; 
+        res.status(200).json({
+            session: x,
+            user: y,
+            Count: count,         
+            Items: affiliate
+        });
+    }      
 });
+
 
 //postAffiliate
 router.post('/', async (req, res, next) => {
@@ -53,22 +72,20 @@ router.post('/', async (req, res, next) => {
     await affiliate.save()
     res.status(200).json({
         message: "Affiliate Created",
-        Affiliate: affiliate
+        affiliate: affiliate
     });
 });
 
 //getAffiliatesByUser
-router.get('/:userName',async (req, res) => {
+router.get('/:userName',async (req, res) => {   
+     
     const userName = req.params.userName;
     const affiliate = await Affiliate.find({userName: userName});
     const count = affiliate.length; 
-    
-    res.status(200).json({
-         message: 'Found Affiliates',
-         Count: count,
-         Affiliates: affiliate
-     });
- 
+    res.status(200).json({                
+        count: count,
+        affiliates: affiliate            
+    });       
  });
  
 //putAffiliate
@@ -105,7 +122,7 @@ router.put('/:affiliateId', async (req, res) => {
 	await Affiliate.findByIdAndUpdate(affiliateId, {$set: affiliate}, {new: true});
     res.status(200).json({
         message: 'Updated affiliate',
-        Affiliate: affiliate
+        affiliate: affiliate
     });
  });
 
@@ -126,7 +143,7 @@ router.get('/profession/:profession',async (req, res) => {
     res.status(200).json({
          message: 'Found Affiliates by profesion',
          Count: count,
-         Affiliates: affiliate
+         affiliates: affiliate
      });
  
  });
@@ -189,16 +206,18 @@ router.get('/:userName/leader/:leader',async (req, res) => {
     const leader = req.params.leader;
     const affiliate = await Affiliate.find({userName: userName, leader: leader});
     const count = affiliate.length; 
+    if(affiliate){
+        res.status(200).json({         
+            Count: count,
+            Affiliates: affiliate
+        });    
+    }else {
+        res.status(200).json({         
+            message: "no found references"
+        }); 
+    }
     
-    res.status(200).json({         
-         Count: count,
-         Affiliates: affiliate
-     });
- 
  });
-
-
-
  
 //función para solicitar Token
  function ensureToken(req, res, next){

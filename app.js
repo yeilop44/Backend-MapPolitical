@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const { mongoose } = require('./api/database/database');
 const cors = require('cors');
+const session = require('express-session');
 
 //const bodyParser = require('body-parser');
 
@@ -18,7 +19,13 @@ app.use(express.json());
 //app.use(bodyParser.urlencoded({extended: false}));
 //app.use(bodyParser.json());
 //app.use(cors());
-app.use(cors({origin: 'http://localhost:4200'}));
+app.use(cors({origin: 'http://localhost:4200', credentials: true}));
+app.use(session({ 
+    secret: 'keyboard cat', 
+    resave: true, 
+    saveUninitialized: true,
+    cookie: { secure: false } 
+ }));
 
 //Routes
 app.use('/affiliates', affiliateRoutes);

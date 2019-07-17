@@ -17,6 +17,7 @@ router.post('/signup', async (req, res) => {
         place: req.body.place,
         positionLat: req.body.positionLat,
         positionLng: req.body.positionLng,
+        redNetworks: req.body.redNetworks,
 
     });
 
@@ -36,7 +37,7 @@ router.post('/signup', async (req, res) => {
             console.log("user created");
             res.status(200).json({
                 message: "User Created",
-                User: user.userName,
+                User: user,
                 password: user.password
             }); 
         });
@@ -62,20 +63,22 @@ router.post('/signin', async (req, res) => {
                     if(err) throw err; 
                     if (result){
                         const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
+                        req.session.user = user;                        
+                        const usernameSession = req.session.user;
+                        
                         res.status(200).json({
-                            ok: 'true',
-                            User: user.userName,
+                            isLogged: true,
+                            user: usernameSession,
                             passwordHash: user.password,
                             token: token                            
                         });
                     }else{
-                        res.status(401).json({
-                        ok: 'false',
-                        message: 'Incorrect password'  
+                        res.status(200).json({
+                            isLogged: false,
+                            message: 'Incorrect password'  
                         });    
                     }
-                })
-         
+                })         
             } catch (error) {
                 console.log(error);
                 res.status(500).send(`something wen't wrong`);
@@ -85,6 +88,39 @@ router.post('/signin', async (req, res) => {
         console.log(error);
         res.status(500).send(`something wen't wrong`);
     }    
+});
+
+//test sesion 
+router.get('/session', async(req, res) => {
+    if(req.session.user){
+        req.session.cuenta = req.session.cuenta? req.session.cuenta + 1: 1;
+        res.status(200).json({
+            isLogged: true, 
+            user: req.session.user,
+            session: req.session.cuenta
+        });
+        }else{
+        res.status(200).json({
+            isLogged: false
+        });        
+        }
+});
+
+//logout
+router.post('/logout', (req, res) => { 
+    req.session.destroy((err) => {
+        if(err){
+            res.status(200).json({
+                message: "error when logout",
+                isLogout: false
+            });
+        }else{
+            res.status(200).json({
+                message: "session closed successfully",
+                isLogout: true
+            });
+        }
+     });
 });
 
 //change password
@@ -108,17 +144,22 @@ router.post('/changepass', async (req, res) => {
                     bcrypt.hash(user.password, 10, async (err, data) => {
                         await User.updateOne({ _id: userFind._id },{$set:{password: data}}, {upsert:true});
                             res.status(200).json({                        
-                            message: 'password chaneged sucessfull'  
+                            message: 'password chaneged sucessfull',
+                            isChanged: true  
+
                             });
                     });                                        
                 }else{
-                    res.status(401).json({       
-                        message: 'la contraseña nueva no coinciden'  
+                    res.status(200).json({       
+                        message: 'la contraseña nueva no coinciden',
+                        isChanged: false
+
                     });
                 }
             }else{
-                res.status(401).json({                
-                message: 'Incorrect current password'  
+                res.status(200).json({                
+                message: 'Incorrect current password',
+                isChanged: false
                 });    
             }
         });  
@@ -128,9 +169,6 @@ router.post('/changepass', async (req, res) => {
         });       
    }         
 });
-
-
-
 
 //getAllUsers
 router.get('/', async (req, res) => {
