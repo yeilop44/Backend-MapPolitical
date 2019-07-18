@@ -25,6 +25,16 @@ app.use(bodyParser.json());
 //app.use(cors());
 //app.use(cors({origin: 'http://localhost:4200'}));
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    const error = new Error('Not found');
+    error.status = 404;
+    next();
+}); 
 
 //Routes
 app.use('/affiliates', affiliateRoutes);
@@ -35,16 +45,7 @@ app.use('/geographyMaster', geographyMasterRoutes);
 app.use('/divipolMaster', divipolMasterRoutes);
 app.use('/uploadApi', uploadDos);
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
 
-    const error = new Error('Not found');
-    error.status = 404;
-    next();
-});
 
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
