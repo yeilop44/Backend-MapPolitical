@@ -5,7 +5,11 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const morgan = require('morgan');
 const { mongoose } = require('./api/database/database');
+const mongoosedos = require('mongoose');
 const cors = require('cors');
+const orderedFlag = 1;
+const batchSize = 10;
+var db = mongoosedos.connection;
 
 //const bodyParser = require('body-parser');
 
@@ -117,16 +121,31 @@ app.post('/upload', function(req, res) {
                     return res.json({error_code:1,err_desc:err, data: null});
                 }
 
+                var i = 0;
+                var arr = new Array();
                 for( var contacto in result )
                 {
-                   new Affiliate(result[contacto])
-                        .save()
-                        .catch( (err)=>{
-                            console.log(err.message);
-                            return res.json({error_code:1,err_desc:err, data: null});
-                        } );
+                    i++;
+
+                    arr.push( new Affiliate(result[contacto]) );
+                    console.log("i="+i+", i%"+batchSize+"="+(i%batchSize));
+                    if (i % batchSize == 0) {
+                        try{
+                            console.log("Insertando registros cuando i="+i)
+                            Affiliate.insertMany(arr, function(error, docs) {
+
+                                if(error){
+                                    return res.json({error_code:0,err_desc:error, data: null, message:"Se generaron errores."})
+                                }
+                            });
+                        }catch (e) {
+                            console.log("AHORA ESTOY EN EL CATCH")
+                            print(e);
+                        }
+
+                    }
                 }
-                res.json({error_code:0,err_desc:null, data: result})
+                //res.json({error_code:0,err_desc:null, data: null, message:"El archivo ha sido cargado exitosamente."})
             });
         } catch (e){
             res.json({error_code:1,err_desc:"El archivo está corrupto o no contiene un formato válido."});
