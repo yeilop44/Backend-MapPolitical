@@ -54,8 +54,9 @@ router.post('/signin', async (req, res) => {
         const user = await User.findOne({userName:userName});
         console.log(user); 
         if(!user){
-            res.status(401).json({
-                message: 'Incorrect user or password'  
+            res.status(200).json({
+                isLogged: false,
+                message: 'Incorrect user' 
             });
         }else{
             try {
