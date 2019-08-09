@@ -83,6 +83,7 @@ router.post('/', async (req, res, next) => {
 
 //getAffiliatesByUser
 <<<<<<< HEAD
+<<<<<<< HEAD
 router.get('/:userName',async (req, res) => {   
      
     const userName = req.params.userName;
@@ -93,6 +94,21 @@ router.get('/:userName',async (req, res) => {
         affiliates: affiliate            
     });       
 =======
+=======
+router.get('/:userName',async (req, res) => {
+
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
+    const count = affiliate.length;
+    res.status(200).json({
+        count: count,
+        affiliates: affiliate
+    });
+});
+
+
+//getAffiliatesByUserPaginated
+>>>>>>> 470bd399abda09d6a5c8218ca5b9cf766a2bb69e
 router.get('/:userName/:page',async (req, res) => {
     const userName = req.params.userName;
     const affiliate = await Affiliate.find({userName: userName});
@@ -107,6 +123,7 @@ router.get('/:userName/:page',async (req, res) => {
     //return res.json({ pager, pageOfItems });
 
     res.status(200).json({
+<<<<<<< HEAD
          message: 'Found Affiliates',
          Count: count,
          Affiliates: affiliate,
@@ -116,6 +133,16 @@ router.get('/:userName/:page',async (req, res) => {
  
 >>>>>>> 6fe1d74a0754e66a2cfe8aaab2b4c1ff4746ec00
  });
+=======
+        message: 'Found Affiliates',
+        Count: count,
+        Affiliates: affiliate,
+        pager,
+        pageOfItems
+    });
+
+});
+>>>>>>> 470bd399abda09d6a5c8218ca5b9cf766a2bb69e
  
 //putAffiliate
 router.put('/:affiliateId', async (req, res) => {
