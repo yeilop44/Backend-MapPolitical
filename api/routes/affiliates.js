@@ -81,6 +81,7 @@ router.post('/', ensureToken, (req, res, next) => {
     }); 
 });
 
+//getAffiliatesByUserPaginated
 router.get('/:userName/:page',async (req, res) => {
     const userName = req.params.userName;
     const affiliate = await Affiliate.find({userName: userName});
@@ -100,9 +101,9 @@ router.get('/:userName/:page',async (req, res) => {
          Affiliates: affiliate,
          pager,
          pageOfItems
-     });
- 
+    });
 });
+
  
 //putAffiliate
 router.put('/:affiliateId', ensureToken, (req, res) => {
