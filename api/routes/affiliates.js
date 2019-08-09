@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const paginate = require('jw-paginate');
+
 const Affiliate = require('../models/affiliate');
 
 //getAllAffiliates
@@ -77,6 +79,29 @@ router.post('/', ensureToken, (req, res, next) => {
             });
         }
     }); 
+});
+
+router.get('/:userName/:page',async (req, res) => {
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
+    const count = affiliate.length;
+
+    //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
+
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 10;
+    const pager = paginate(affiliate.length, page, pageSize);
+    const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
+    //return res.json({ pager, pageOfItems });
+
+    res.status(200).json({
+         message: 'Found Affiliates',
+         Count: count,
+         Affiliates: affiliate,
+         pager,
+         pageOfItems
+     });
+ 
 });
  
 //putAffiliate

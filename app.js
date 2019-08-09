@@ -9,7 +9,7 @@ const mongoosedos = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const orderedFlag = 1;
-const batchSize = 10;
+const batchSize = 100000;
 var db = mongoosedos.connection;
 
 //const bodyParser = require('body-parser');
@@ -110,6 +110,7 @@ app.post('/upload', function(req, res) {
         }
         /** Multer gives us file info in req.file object */
         if(!req.file){
+            console.log("Esto también está generando error");
             res.json({error_code:1,err_desc:"No file passed"});
             return;
         }
@@ -122,43 +123,70 @@ app.post('/upload', function(req, res) {
         } else {
             exceltojson = xlstojson;
         }
-        try {
+
+        try
+        {
             exceltojson({
                 input: req.file.path, //la misma ruta en la que acabamos de cargar el archivo
                 output: null, //null cuando no necesitamos generar una salida en archivo json
                 lowerCaseHeaders:false
             }, function(err,result){
                 if(err) {
+                    console.log("Imaginate que estoy en este err...")
                     return res.json({error_code:1,err_desc:err, data: null});
                 }
 
                 var i = 0;
+                var j = 0;
                 var arr = new Array();
+                var errores = "";
                 for( var contacto in result )
                 {
                     i++;
+                    j++;
 
                     arr.push( new Affiliate(result[contacto]) );
-                    console.log("i="+i+", i%"+batchSize+"="+(i%batchSize));
-                    if (i % batchSize == 0) {
-                        try{
-                            console.log("Insertando registros cuando i="+i)
-                            Affiliate.insertMany(arr, function(error, docs) {
 
+                    if ( (i === batchSize) || (j === result.length))
+                    {
+                        try
+                        {
+                            console.log("Insertando registros cuando i="+i + " y arr=" + arr.length + ", y j="+j)
+                            i = 0;
+                            Affiliate.insertMany(arr, function(error, docs) {
+                                arr = new Array();
                                 if(error){
-                                    return res.json({error_code:0,err_desc:error, data: null, message:"Se generaron errores."})
+                                    //console.log("JOder... hubo errores!!!" + error.message);
+                                    //errores = error.message;
+                                    //console.log(JSON.stringify(errores, null, 4));
+                                    return res.json({error_code:1,err_desc:error.message, data: null});
+                                }
+                                else{
+                                    if(j === result.length){
+                                        return res.json({error_code:0,err_desc:null, data: null, message:"El archivo ha sido cargado exitosamente!"});
+                                    }
                                 }
                             });
-                        }catch (e) {
+                        }
+                        catch (e)
+                        {
                             console.log("AHORA ESTOY EN EL CATCH")
                             print(e);
                         }
 
                     }
                 }
-                //res.json({error_code:0,err_desc:null, data: null, message:"El archivo ha sido cargado exitosamente."})
+                /*console.log("Errores: " + errores);
+                if(errores !== "" && typeof errores !== "undefined"){
+                    res.json({error_code:1,err_desc:errores.message, data: null})
+                }
+                else{
+                    res.json({error_code:0,err_desc:null, data: null, message:"El archivo ha sido cargado exitosamente."})
+                }*/
+
             });
         } catch (e){
+            console.log("Estoy en el otro catch")
             res.json({error_code:1,err_desc:"El archivo está corrupto o no contiene un formato válido."});
         }
     });
