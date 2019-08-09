@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
+=======
+const paginate = require('jw-paginate');
+
+>>>>>>> 6fe1d74a0754e66a2cfe8aaab2b4c1ff4746ec00
 const Affiliate = require('../models/affiliate');
 const { userSession } = require('./user');
 
@@ -77,6 +82,7 @@ router.post('/', async (req, res, next) => {
 });
 
 //getAffiliatesByUser
+<<<<<<< HEAD
 router.get('/:userName',async (req, res) => {   
      
     const userName = req.params.userName;
@@ -86,6 +92,29 @@ router.get('/:userName',async (req, res) => {
         count: count,
         affiliates: affiliate            
     });       
+=======
+router.get('/:userName/:page',async (req, res) => {
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
+    const count = affiliate.length;
+
+    //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
+
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 10;
+    const pager = paginate(affiliate.length, page, pageSize);
+    const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
+    //return res.json({ pager, pageOfItems });
+
+    res.status(200).json({
+         message: 'Found Affiliates',
+         Count: count,
+         Affiliates: affiliate,
+         pager,
+         pageOfItems
+     });
+ 
+>>>>>>> 6fe1d74a0754e66a2cfe8aaab2b4c1ff4746ec00
  });
  
 //putAffiliate
