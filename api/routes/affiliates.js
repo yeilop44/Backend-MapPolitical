@@ -59,6 +59,19 @@ router.post('/', async (req, res, next) => {
 });
 
 //getAffiliatesByUser
+router.get('/:userName',async (req, res) => {
+
+    const userName = req.params.userName;
+    const affiliate = await Affiliate.find({userName: userName});
+    const count = affiliate.length;
+    res.status(200).json({
+        count: count,
+        affiliates: affiliate
+    });
+});
+
+
+//getAffiliatesByUserPaginated
 router.get('/:userName/:page',async (req, res) => {
     const userName = req.params.userName;
     const affiliate = await Affiliate.find({userName: userName});
@@ -73,14 +86,14 @@ router.get('/:userName/:page',async (req, res) => {
     //return res.json({ pager, pageOfItems });
 
     res.status(200).json({
-         message: 'Found Affiliates',
-         Count: count,
-         Affiliates: affiliate,
-         pager,
-         pageOfItems
-     });
- 
- });
+        message: 'Found Affiliates',
+        Count: count,
+        Affiliates: affiliate,
+        pager,
+        pageOfItems
+    });
+
+});
  
 //putAffiliate
 router.put('/:affiliateId', async (req, res) => {
