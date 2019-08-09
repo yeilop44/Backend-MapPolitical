@@ -15,11 +15,13 @@ var db = mongoosedos.connection;
 //const bodyParser = require('body-parser');
 
 const affiliateRoutes = require('./api/routes/affiliates'); 
+const commitmentRoutes = require('./api/routes/commitment'); 
 const userRoutes = require('./api/routes/user'); 
 const listMasterRoutes = require('./api/routes/listMaster'); 
 const electoralMasterRoutes = require('./api/routes/electoralMaster'); 
 const geographyMasterRoutes = require('./api/routes/geographyMaster'); 
 const divipolMasterRoutes = require('./api/routes/divipolMaster');
+const commitmentMasterRoutes = require('./api/routes/commitmentMaster');
 const uploadDos = require('./api/routes/uploadApi');
 const Affiliate = require('./api/models/affiliate');
 
@@ -50,13 +52,14 @@ app.use((req, res, next) => {
 
 //Routes
 app.use('/affiliates', affiliateRoutes);
+app.use('/commitments', commitmentRoutes);
 app.use('/user', userRoutes);
 app.use('/listMaster', listMasterRoutes);
 app.use('/electoralMaster', electoralMasterRoutes);
 app.use('/geographyMaster', geographyMasterRoutes);
 app.use('/divipolMaster', divipolMasterRoutes);
+app.use('/commitmentMaster', commitmentMasterRoutes);
 app.use('/uploadApi', uploadDos);
-
 
 
 app.use((error, req, res, next) => {

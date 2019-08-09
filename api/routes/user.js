@@ -64,14 +64,16 @@ router.post('/signin', async (req, res) => {
                     if(err) throw err; 
                     if (result){
                         const token = jwt.sign({ user }, 'my_secret_key', { expiresIn: "1h" });
-                        req.session.user = user;                        
-                        const usernameSession = req.session.user;
+                        req.session.user = user;
+                        req.session.token = token;                        
+                        const userSession = {
+                            user: req.session.user,
+                            token: req.session.token
+                        };
                         
                         res.status(200).json({
                             isLogged: true,
-                            user: usernameSession,
-                            passwordHash: user.password,
-                            token: token                            
+                            user: userSession                                                  
                         });
                     }else{
                         res.status(200).json({
@@ -94,10 +96,14 @@ router.post('/signin', async (req, res) => {
 //test sesion 
 router.get('/session', async(req, res) => {
     if(req.session.user){
+        const userSession = {
+            user: req.session.user,
+            token: req.session.token
+        };
         req.session.cuenta = req.session.cuenta? req.session.cuenta + 1: 1;
         res.status(200).json({
             isLogged: true, 
-            user: req.session.user,
+            user: userSession,
             session: req.session.cuenta
         });
         }else{
