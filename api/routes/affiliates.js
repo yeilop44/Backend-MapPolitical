@@ -98,7 +98,7 @@ router.get('/:userName/:page',async (req, res) => {
     res.status(200).json({
          message: 'Found Affiliates',
          Count: count,
-         Affiliates: affiliate,
+         affiliates: affiliate,
          pager,
          pageOfItems
     });
