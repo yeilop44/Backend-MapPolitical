@@ -9,7 +9,6 @@ const mongoosedos = require('mongoose');
 const cors = require('cors');
 const orderedFlag = 1;
 const batchSize = 100000;
-var db = mongoosedos.connection;
 
 //const bodyParser = require('body-parser');
 
