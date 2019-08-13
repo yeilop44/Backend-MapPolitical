@@ -46,7 +46,7 @@ router.put('/:geographyId', async (req, res) => {
 	await GeographyMaster.findByIdAndUpdate(geographyId, {$set: geographyMaster}, {new: true});
     res.status(200).json({
         message: 'Updated geogaphy',
-        Affiliate: geographyMaster
+        Geography: geographyMaster
     });
  });
 
