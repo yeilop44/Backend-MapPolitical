@@ -83,32 +83,39 @@ router.post('/', ensureToken, (req, res, next) => {
 });
 
 //getAffiliatesByUserPaginated
-router.get('/:userName/:page',async (req, res) => {
-    const userName = req.params.userName;
-    const page = parseInt(req.params.page) || 1;
+router.get('/:userName/:page', ensureToken, (req, res) => {
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const page = parseInt(req.params.page) || 1;
 
-    var skips = totalRowsPerPage * (page - 1);
+            var skips = totalRowsPerPage * (page - 1);
 
-    console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
+            console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
 
-    const affiliate = await Affiliate.find({userName: userName});
-    const pageOfItems = await Affiliate.find({userName: userName}).skip(skips).limit(totalRowsPerPage);
-    console.log("Tamaño de consulta: " + pageOfItems.length)
-    const count = affiliate.length;
+            const affiliate = await Affiliate.find({userName: userName});
+            const pageOfItems = await Affiliate.find({userName: userName}).skip(skips).limit(totalRowsPerPage);
+            console.log("Tamaño de consulta: " + pageOfItems.length)
+            const count = affiliate.length;
 
-    //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
+            //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
 
-    const pager = paginate(affiliate.length, page, totalRowsPerPage);
-    //const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
-    //return res.json({ pager, pageOfItems });
+            const pager = paginate(affiliate.length, page, totalRowsPerPage);
+            //const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
+            //return res.json({ pager, pageOfItems });
 
-    res.status(200).json({
-         message: 'Found Affiliates',
-         Count: count,
-         affiliates: affiliate,
-         pager,
-         pageOfItems
-    });
+            res.status(200).json({
+                message: 'Found Affiliates',
+                Count: count,
+                affiliates: affiliate,
+                pager,
+                pageOfItems
+            });
+        }
+    }); 
+    
 });
 
  
