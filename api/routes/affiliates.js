@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const paginate = require('jw-paginate');
 
 const Affiliate = require('../models/affiliate');
-const totalRowsPerPage = 15;
+const totalRowsPerPage = 10;
 
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
