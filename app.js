@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 //app.use(cors());
-app.use(cors({origin: 'http://mappoliticalfrontend-env.semmrdp3zc.us-east-2.elasticbeanstalk.com', credentials: true}));
+app.use(cors({origin: 'http://localhost:4200', credentials: true}));
 app.use(session({ 
     secret: 'keyboard cat', 
     resave: true, 
