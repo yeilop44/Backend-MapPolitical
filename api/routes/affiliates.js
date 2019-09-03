@@ -95,14 +95,17 @@ router.get('/:userName/:page', ensureToken, (req, res) => {
 
             console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
 
-            const affiliate = await Affiliate.find({userName: userName});
+            const affiliate = await Affiliate.find({userName: userName}).count();
+            console.log("Cantidad de registros encontrados: " + affiliate);
+            console.log("Valor de username: " + userName);
+
             const pageOfItems = await Affiliate.find({userName: userName}).skip(skips).limit(totalRowsPerPage);
             console.log("Tamaño de consulta: " + pageOfItems.length)
-            const count = affiliate.length;
+            const count = affiliate;
 
             //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
 
-            const pager = paginate(affiliate.length, page, totalRowsPerPage);
+            const pager = paginate(affiliate, page, totalRowsPerPage);
             //const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
             //return res.json({ pager, pageOfItems });
 
