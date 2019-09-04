@@ -260,6 +260,26 @@ router.get('/:userName/leader/:leader',async (req, res) => {
     }
     
  });
+
+ //getAffiliatesByNames
+router.get('/:userName/names/:names',async (req, res) => {
+    const userName = req.params.userName;
+    const names = req.params.names;
+    const affiliate = await Affiliate.find({ userName: userName,  "$or": [{ names: { '$regex': names, '$options': 'i' } },
+                                            { surnames: { '$regex': names, '$options': 'i' } }]});                  
+    const count = affiliate.length; 
+    if(affiliate){
+        res.status(200).json({         
+            Count: count,
+            Affiliates: affiliate
+        });    
+    }else {
+        res.status(200).json({         
+            message: "no found affiliates"
+        }); 
+    }
+    
+ });
  
 //Token request function
  function ensureToken(req, res, next){
