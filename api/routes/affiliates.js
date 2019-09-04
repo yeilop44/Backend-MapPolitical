@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const paginate = require('jw-paginate');
 
 const Affiliate = require('../models/affiliate');
+const totalRowsPerPage = 15;
 
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
@@ -82,26 +83,39 @@ router.post('/', ensureToken, (req, res, next) => {
 });
 
 //getAffiliatesByUserPaginated
-router.get('/:userName/:page',async (req, res) => {
-    const userName = req.params.userName;
-    const affiliate = await Affiliate.find({userName: userName});
-    const count = affiliate.length;
+router.get('/:userName/:page', ensureToken, (req, res) => {
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const page = parseInt(req.params.page) || 1;
 
-    //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
+            var skips = totalRowsPerPage * (page - 1);
 
-    const page = parseInt(req.params.page) || 1;
-    const pageSize = 10;
-    const pager = paginate(affiliate.length, page, pageSize);
-    const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
-    //return res.json({ pager, pageOfItems });
+            console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
 
-    res.status(200).json({
-         message: 'Found Affiliates',
-         Count: count,
-         affiliates: affiliate,
-         pager,
-         pageOfItems
-    });
+            const affiliate = await Affiliate.find({userName: userName});
+            const pageOfItems = await Affiliate.find({userName: userName}).skip(skips).limit(totalRowsPerPage);
+            console.log("Tamaño de consulta: " + pageOfItems.length)
+            const count = affiliate.length;
+
+            //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
+
+            const pager = paginate(affiliate.length, page, totalRowsPerPage);
+            //const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
+            //return res.json({ pager, pageOfItems });
+
+            res.status(200).json({
+                message: 'Found Affiliates',
+                Count: count,
+                affiliates: affiliate,
+                pager,
+                pageOfItems
+            });
+        }
+    }); 
+    
 });
 
  
@@ -242,6 +256,26 @@ router.get('/:userName/leader/:leader',async (req, res) => {
     }else {
         res.status(200).json({         
             message: "no found references"
+        }); 
+    }
+    
+ });
+
+ //getAffiliatesByNames
+router.get('/:userName/names/:names',async (req, res) => {
+    const userName = req.params.userName;
+    const names = req.params.names;
+    const affiliate = await Affiliate.find({ userName: userName,  "$or": [{ names: { '$regex': names, '$options': 'i' } },
+                                            { surnames: { '$regex': names, '$options': 'i' } }]});                  
+    const count = affiliate.length; 
+    if(affiliate){
+        res.status(200).json({         
+            Count: count,
+            Affiliates: affiliate
+        });    
+    }else {
+        res.status(200).json({         
+            message: "no found affiliates"
         }); 
     }
     

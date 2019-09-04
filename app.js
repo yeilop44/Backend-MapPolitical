@@ -10,7 +10,6 @@ const cors = require('cors');
 const session = require('express-session');
 const orderedFlag = 1;
 const batchSize = 100000;
-var db = mongoosedos.connection;
 
 //const bodyParser = require('body-parser');
 
