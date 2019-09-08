@@ -6,6 +6,7 @@ const affiliateSchema = new Schema({
 	birthdate: { type: String, required: true},
 	names: {type: String, required: true},
 	surnames: {type: String, required: true},
+	fullname: {type: String},
 	sex: {type: String},
 	zone: {type: String},
 	subdivision: {type: String},

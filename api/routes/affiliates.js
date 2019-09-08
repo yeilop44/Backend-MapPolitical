@@ -52,6 +52,7 @@ router.post('/', ensureToken, (req, res, next) => {
                 birthdate: req.body.birthdate,
                 names: req.body.names,
                 surnames: req.body.surnames,
+                fullname: req.body.names + ' ' + req.body.surnames,
                 sex: req.body.sex,
                 zone: req.body.zone,
                 subdivision: req.body.subdivision,
@@ -131,6 +132,7 @@ router.put('/:affiliateId', ensureToken, (req, res) => {
                 birthdate: req.body.birthdate,
                 names: req.body.names,
                 surnames: req.body.surnames,
+                fullname: req.body.names + ' ' + req.body.surnames,
                 sex: req.body.sex,
                 zone: req.body.zone,
                 subdivision: req.body.subdivision,
@@ -265,8 +267,7 @@ router.get('/:userName/leader/:leader',async (req, res) => {
 router.get('/:userName/names/:names',async (req, res) => {
     const userName = req.params.userName;
     const names = req.params.names;
-    const affiliate = await Affiliate.find({ userName: userName,  "$or": [{ names: { '$regex': names, '$options': 'i' } },
-                                            { surnames: { '$regex': names, '$options': 'i' } }]});                  
+    const affiliate = await Affiliate.find({ userName: userName,  fullname: { '$regex': names, '$options': 'i' } });                  
     const count = affiliate.length; 
     if(affiliate){
         res.status(200).json({         
