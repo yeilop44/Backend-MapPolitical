@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const paginate = require('jw-paginate');
 
 const Affiliate = require('../models/affiliate');
-const totalRowsPerPage = 10;
+const totalRowsPerPage = 12;
 
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
@@ -100,7 +100,7 @@ router.get('/:userName/:page', ensureToken, (req, res) => {
             console.log("Cantidad de registros encontrados: " + affiliate);
             console.log("Valor de username: " + userName);
 
-            const pageOfItems = await Affiliate.find({userName: userName}).skip(skips).limit(totalRowsPerPage);
+            const pageOfItems = await Affiliate.find({userName: userName}, null, {sort:{names: 1}}).skip(skips).limit(totalRowsPerPage);
             console.log("Tamaño de consulta: " + pageOfItems.length)
             const count = affiliate;
 
@@ -130,6 +130,7 @@ router.get('/searchengine/:userName/:searchCriteria/:page', ensureToken, (req, r
                 message: "Ocurrió un error al intentar realizar la búsqueda. Inténtelo más tarde."
             });
         }else{
+            console.log("En el searchengine");
             const userName = req.params.userName;
             const searchCriteria = (req.params.searchCriteria) || "";
             const page = parseInt(req.params.page) || 1;
@@ -145,7 +146,7 @@ router.get('/searchengine/:userName/:searchCriteria/:page', ensureToken, (req, r
             const pageOfItems = await Affiliate.find({userName: userName, 
                                                     $or: [ {names: new RegExp(searchCriteria, 'i')},
                                                     {surnames: new RegExp(searchCriteria, 'i')}] 
-                                                });
+                                                }).skip(skips).limit(totalRowsPerPage);;
 
             console.log("Tamaño de consulta: " + pageOfItems.length)
             
