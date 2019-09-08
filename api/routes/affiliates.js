@@ -123,39 +123,37 @@ router.get('/:userName/:page', ensureToken, (req, res) => {
 });
 
 
-router.get('/:userName/:searchCriteria/:page', ensureToken, (req, res) => {
+router.get('/searchengine/:userName/:searchCriteria/:page', ensureToken, (req, res) => {
     jwt.verify(req.token, 'my_secret_key', async (err, data) => {
         if(err){
-            res.sendStatus(403);
+            res.status(403).json({
+                message: "Ocurrió un error al intentar realizar la búsqueda. Inténtelo más tarde."
+            });
         }else{
             const userName = req.params.userName;
             const searchCriteria = (req.params.searchCriteria) || "";
-            const page = 1;
-            //var skips = totalRowsPerPage * (page - 1);
+            const page = parseInt(req.params.page) || 1;
+            var skips = totalRowsPerPage * (page - 1);
 
-            //console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
-
-            const affiliate = await Affiliate.find({userName: userName}).count();
+            console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
+            
+            const totalRows = await Affiliate.find({userName: userName, 
+                                                    $or: [ {names: new RegExp(searchCriteria, 'i')},
+                                                    {surnames: new RegExp(searchCriteria, 'i')}] 
+                                                }).count();
             
             const pageOfItems = await Affiliate.find({userName: userName, 
                                                     $or: [ {names: new RegExp(searchCriteria, 'i')},
-                                                    {surnames: new RegExp(searchCriteria, 'i')},
-                                                    {identification: new RegExp(searchCriteria, 'i')} ] 
+                                                    {surnames: new RegExp(searchCriteria, 'i')}] 
                                                 });
 
             console.log("Tamaño de consulta: " + pageOfItems.length)
-            const count = affiliate;
-
-            //const items = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
-
-            const pager = paginate(affiliate, page, totalRowsPerPage);
-            //const pageOfItems = affiliate.slice(pager.startIndex, pager.endIndex + 1);
-            //return res.json({ pager, pageOfItems });
-
+            
+            const pager = paginate(totalRows, page, totalRowsPerPage);
+            
             res.status(200).json({
                 message: 'Found Affiliates',
-                Count: count,
-                affiliates: affiliate,
+                totalRows: totalRows,                
                 pager,
                 pageOfItems
             });
