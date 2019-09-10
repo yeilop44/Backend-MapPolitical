@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const paginate = require('jw-paginate');
 
 const Affiliate = require('../models/affiliate');
-const totalRowsPerPage = 12;
+const totalRowsPerPage = 50;
 
 //getAllAffiliates
 router.get('/', ensureToken, (req, res) => {
@@ -162,6 +162,8 @@ router.get('/searchengine/:userName/:searchCriteria/:page', ensureToken, (req, r
     }); 
     
 });
+
+
 
  
 //putAffiliate
@@ -325,6 +327,85 @@ router.get('/:userName/names/:names',async (req, res) => {
     }
     
  });
+
+
+ //getAffiliatesByUserZone
+router.get('/:userName/zone/:zone', ensureToken, (req, res) => {   
+    
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const zone = req.params.zone;
+            const affiliate = await Affiliate.find({userName: userName, zone: zone});
+            const totalRows = affiliate.length; 
+            res.status(200).json({                
+                totalRows: totalRows,
+                pageOfItems: affiliate            
+            }); 
+        }
+    });               
+ });
+
+
+ //getAffiliatesByUserSubdivision
+router.get('/:userName/subdivision/:subdivision', ensureToken, (req, res) => {   
+    
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const subdivision = req.params.subdivision;
+            const affiliate = await Affiliate.find({userName: userName, subdivision: subdivision});
+            const totalRows = affiliate.length; 
+            res.status(200).json({                
+                totalRows: totalRows,
+                pageOfItems: affiliate            
+            }); 
+        }
+    });               
+ });
+
+ //getAffiliatesByUserProfession
+router.get('/:userName/profession/:profession', ensureToken, (req, res) => {   
+    
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const profession = req.params.profession;
+            const affiliate = await Affiliate.find({userName: userName, profession: profession});
+            const totalRows = affiliate.length; 
+            res.status(200).json({                
+                totalRows: totalRows,
+                pageOfItems: affiliate            
+            }); 
+        }
+    });               
+ });
+
+ //getAffiliatesByUserChurch
+ router.get('/:userName/church/:church', ensureToken, (req, res) => {   
+    
+    jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const church = req.params.church;
+            const affiliate = await Affiliate.find({userName: userName, church: church});
+            const totalRows = affiliate.length; 
+            res.status(200).json({                
+                totalRows: totalRows,
+                pageOfItems: affiliate            
+            }); 
+        }
+    });               
+ });
+
  
 //Token request function
  function ensureToken(req, res, next){
