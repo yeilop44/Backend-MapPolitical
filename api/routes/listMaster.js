@@ -28,4 +28,16 @@ router.get('/', async (req, res) => {
     });     
 });
 
+
+//getAll
+router.get('/:type', async (req, res) => {
+    const type = req.params.type;
+    const listMaster = await ListMaster.find({type: type});
+    const count = listMaster.length; 
+    res.status(200).json({
+        Count: count,
+        Items: listMaster
+    });     
+});
+
 module.exports = router;
