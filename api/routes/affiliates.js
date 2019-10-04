@@ -84,23 +84,32 @@ router.post('/', ensureToken, (req, res, next) => {
 });
 
 //getAffiliatesByUserPaginated
-router.get('/:userName/:page', ensureToken, (req, res) => {
+router.post('/:userName/:page', ensureToken, (req, res) => {
     jwt.verify(req.token, 'my_secret_key', async (err, data) => {
         if(err){
             res.sendStatus(403);
         }else{
             const userName = req.params.userName;
-            const page = parseInt(req.params.page) || 1;
+            const page = parseInt(req.params.page);
+            const zone = req.body.selectedZoneFilter;
+            const neigh = req.body.selectedNeighborhoodFilter;
+            const prof = req.body.selectedProfessionFilter;
+            const relig = req.body.selectedReligionFilter;
+            const body = req.body;
+            body.userName = userName;
+
+
+            console.log("BODY: " + JSON.stringify(req.body, null, 4));
 
             var skips = totalRowsPerPage * (page - 1);
 
             console.log("skips vale: " + skips + ", pageSize vale: " + totalRowsPerPage + ", page vale:" + page + " tipos: " + typeof skips + " " + typeof  totalRowsPerPage + " " + typeof page);
 
-            const affiliate = await Affiliate.find({userName: userName}).count();
+            const affiliate = await Affiliate.find(body).count();
             console.log("Cantidad de registros encontrados: " + affiliate);
             console.log("Valor de username: " + userName);
 
-            const pageOfItems = await Affiliate.find({userName: userName}, null, {sort:{names: 1}}).skip(skips).limit(totalRowsPerPage);
+            const pageOfItems = await Affiliate.find(body, null, {sort:{names: 1}}).skip(skips).limit(totalRowsPerPage);
             console.log("Tamaño de consulta: " + pageOfItems.length)
             const count = affiliate;
 
@@ -420,6 +429,23 @@ router.get('/:userName/profession/:profession', ensureToken, (req, res) => {
         res.sendStatus(403);
     }
 }
+
+
+router.get('/listar/neighborhood/:userName', ensureToken, (req, res) => {   
+        jwt.verify(req.token, 'my_secret_key', async (err, data) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            const userName = req.params.userName;
+            const affiliate = await Affiliate.distinct('subdivision', {userName:userName});
+            const totalRows = affiliate.length; 
+            res.status(200).json({                
+                totalRows: totalRows,
+                Items: affiliate            
+            }); 
+        }
+    });               
+ });
 
 
 module.exports = router;
