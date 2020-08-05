@@ -14,7 +14,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
-    "express-fileupload": "^1.1.5",
+    "express-fileupload": "^1.1.9",
     "express-session": "^1.16.2",
     "jsonwebtoken": "^8.5.1",
     "jw-paginate": "^1.0.4",
